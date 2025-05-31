@@ -1,0 +1,5 @@
+<launch>
+    <node name="location_receive" pkg="location_transmit" type="location_receiver.py" />
+    <node name="index_publisher" pkg="location_transmit" type="index_publisher.py" />
+    <node name="product_location_publisher" pkg="location_transmit" type="destination.py" />
+</launch>

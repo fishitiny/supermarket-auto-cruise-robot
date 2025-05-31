@@ -1,0 +1,38 @@
+<launch>
+    <!-- 是否打开rviz || Whether to open rviz -->
+    <arg name="use_rviz" default="true"/>
+    <!-- 地图名 || Map name  my_map-->
+    <arg name="map" default="my_map"/>
+    <!-- MarkerArray node> -->
+    <node name='send_mark' pkg="yahboomcar_nav" type="send_mark.py"/>
+    <!-- 加载地图 || Load map -->
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find yahboomcar_nav)/maps/$(arg map).yaml"/>
+    <!-- AMCL自适应蒙特卡洛定位 -->
+    <node pkg="jie_ware" type="lidar_loc" name="lidar_loc" >
+    <param name="base_frame" value="base_footprint" />
+    <param name="odom_frame" value="odom" />
+    <param name="laser_frame" value="laser" />
+    <param name="laser_topic" value="scan" />
+   </node>
+
+    <node name="waypoint_generator" pkg="yahboomcar_nav" type="waypoint_generator.py">
+        <param name="filename" type="string" value="/home/ydr/workspace/rd_wa/src/yahboomcar_nav/param/waypoint.yaml"/>
+    </node>
+
+    <node name="waypoint_packager" pkg="yahboomcar_nav" type="waypoint_packager.py">
+        <param name="filename" type="string" value="/home/ydr/workspace/rd_wa/src/yahboomcar_nav/param/my_waypoint.yaml"/>
+        <param name="random" type="bool" value="False"/>
+        <param name="repeat" type="bool" value="False"/>
+    </node>
+
+    <node name="infer_node" pkg="yahboomcar_nav" type="infer.py">
+    </node>
+
+
+
+    <!-- 导航核心组件move_base -->
+    <include file="$(find yahboomcar_nav)/launch/library/move_base.launch"/>
+    <!-- RVIZ -->
+    <include file="$(find yahboomcar_nav)/launch/view/view_navigate.launch" if="$(arg use_rviz)"/>
+</launch>
+

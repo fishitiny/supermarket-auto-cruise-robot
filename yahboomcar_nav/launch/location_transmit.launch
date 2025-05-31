@@ -1,0 +1,5 @@
+<launch>
+    <node name="location_receive" pkg="yahboomcar_nav" type="location_receiver.py" />
+    <node name="index_publisher" pkg="yahboomcar_nav" type="index_publisher.py" />
+    <node name="product_location_publisher" pkg="yahboomcar_nav" type="destination.py" />
+</launch>
